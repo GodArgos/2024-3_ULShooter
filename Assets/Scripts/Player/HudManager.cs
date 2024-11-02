@@ -45,11 +45,14 @@ public class HudManager : MonoBehaviour
         if (test)
         {
             ApplyDamage(5); // Ejemplo: aplica 20 de daño
+            test = false;
         }
     }
 
     public void ApplyDamage(int totalDamage)
     {
+        TriggerDamage();
+
         if (currentArmor > 0)
         {
             int healthDamage = Mathf.CeilToInt(totalDamage * distributionFactor); // 1/5 del daño total a la vida
@@ -105,5 +108,11 @@ public class HudManager : MonoBehaviour
     {
         float healthFactor = (float)currentHealth / maxHealth;
         faceAnimator.SetFloat("HealthFactor", healthFactor);
+    }
+
+    private void TriggerDamage()
+    {
+        faceAnimator.SetFloat("Direction", Random.Range(0, 2));
+        faceAnimator.SetTrigger("Damage");
     }
 }

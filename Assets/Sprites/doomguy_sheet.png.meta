@@ -669,7 +669,7 @@ TextureImporter:
         serializedVersion: 2
         x: 113
         y: 68
-        width: 57
+        width: 28
         height: 31
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -953,6 +953,27 @@ TextureImporter:
       bones: []
       spriteID: c4ced6d591ffb3945bce996a598f21fd
       internalID: 124069681
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: doomguy_sheet_40
+      rect:
+        serializedVersion: 2
+        x: 141
+        y: 68
+        width: 29
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 450f1ec5745c1a641a52fde593687566
+      internalID: -1435717995
       vertices: []
       indices: 
       edges: []
