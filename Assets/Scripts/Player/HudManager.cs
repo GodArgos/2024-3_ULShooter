@@ -10,6 +10,7 @@ public class HudManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI healthText;
     [SerializeField] private TextMeshProUGUI armorText;
     [SerializeField] private Animator faceAnimator;
+    [SerializeField] private AudioSource audioSource;
     [SerializeField] private float distributionFactor = 0.2f;
     private Dictionary<int, int> fontIndex;
     public bool test = false;
@@ -112,6 +113,7 @@ public class HudManager : MonoBehaviour
 
     private void TriggerDamage()
     {
+        audioSource.PlayOneShot(audioSource.clip);
         faceAnimator.SetFloat("Direction", Random.Range(0, 2));
         faceAnimator.SetTrigger("Damage");
     }
