@@ -1,5 +1,6 @@
 using UnityEngine;
-using System.Collections; // Asegúrate de incluir esta línea para usar corutinas
+using System.Collections;
+using System.Collections.Generic; // Agrega esta línea para usar listas
 
 public class EnemySpawnerGUI : MonoBehaviour
 {
@@ -11,8 +12,11 @@ public class EnemySpawnerGUI : MonoBehaviour
 
     public float spawnInterval = 1f; // Tiempo entre cada spawn
     private bool spawnerActive = false; // Controla si el spawner está activo
-    public int maxEnemies = 20; // Máximo número de enemigos a generar
-    public int enemiesPerSpawn = 4; // Número de enemigos a generar por cada tipo en cada ciclo
+    public int maxEnemies; // Máximo número de enemigos a generar
+    public int suma;
+    public int ene1;
+    public int ene2;
+    private List<GameObject> activeEnemies = new List<GameObject>(); // Lista para rastrear enemigos activos
 
     private void Start()
     {
@@ -26,13 +30,22 @@ public class EnemySpawnerGUI : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F))
         {
             showGUI = !showGUI; // Alternar la visibilidad de la GUI
+
             if (showGUI)
             {
-                ActivateSpawner(); // Activa el spawner al abrir la GUI
+                // Pausar el juego cuando la GUI está abierta
+                Time.timeScale = 0;
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
+            else
+            {
+                // Reanudar el juego cuando la GUI está cerrada
+                Time.timeScale = 1;
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
             }
         }
-        
-        // Aquí puedes implementar cualquier lógica adicional necesaria cuando la GUI está activa
     }
 
     void OnGUI()
@@ -59,15 +72,13 @@ public class EnemySpawnerGUI : MonoBehaviour
                 DeactivateSpawner();
             }
         }
-        else
-        {
-            Time.timeScale = 1f; // Reanuda el juego si la GUI no está activa
-        }
     }
 
     // Método para activar el spawner
     public void ActivateSpawner()
     {
+        DeactivateSpawner(); // Detener el spawner si ya estaba activo
+        DestroyExistingEnemies(); // Eliminar enemigos existentes
         spawnerActive = true;
         StartCoroutine(SpawnEnemies()); // Inicia la corutina para el spawneo
     }
@@ -80,46 +91,55 @@ public class EnemySpawnerGUI : MonoBehaviour
 
     // Corrutina para spawn de enemigos
     private IEnumerator SpawnEnemies()
+{
+    // Generar enemigos solo una vez al iniciar el spawner
+    int enemiesType1 = Random.Range(1, maxEnemies + 1); // Genera entre 1 y maxEnemies enemigos de tipo 1
+    int enemiesType2 = Random.Range(1, maxEnemies + 1); // Genera entre 1 y maxEnemies enemigos de tipo 2
+    suma = enemiesType1 + enemiesType2;
+
+    Debug.Log("Enemigos 1: " + enemiesType1);
+    Debug.Log("Enemigos 2: " + enemiesType2);
+
+    // Controlar la cantidad total de enemigos generados
+    for (int i = 0; i < enemiesType1; i++)
     {
-        int enemiesSpawned = 0;
-
-        // Mientras el spawner esté activo y no se haya alcanzado el máximo
-        while (spawnerActive && enemiesSpawned < maxEnemies)
-        {
-            // Calcular cuántos enemigos generar de cada tipo
-            int remainingEnemies = maxEnemies - enemiesSpawned;
-            int enemiesType1 = Random.Range(0, remainingEnemies + 1); // Generar un número aleatorio para el tipo 1
-            int enemiesType2 = remainingEnemies - enemiesType1; // El resto será el tipo 2
-
-            // Genera enemigos del tipo 1
-            for (int i = 0; i < enemiesType1 && enemiesSpawned < maxEnemies; i++)
-            {
-                SpawnEnemyAtSpawnerPosition(enemyType1Prefab);
-                enemiesSpawned++;
-            }
-
-            // Genera enemigos del tipo 2
-            for (int i = 0; i < enemiesType2 && enemiesSpawned < maxEnemies; i++)
-            {
-                SpawnEnemyAtSpawnerPosition(enemyType2Prefab);
-                enemiesSpawned++;
-            }
-
-            // Espera el tiempo de spawn entre cada ciclo
-            yield return new WaitForSeconds(spawnInterval);
-        }
-
-        // Desactiva el spawner al finalizar
-        spawnerActive = false;
+        if (!spawnerActive) break; // Salir si el spawner se desactiva
+        GameObject enemy = SpawnEnemyAtSpawnerPosition(enemyType1Prefab);
+        activeEnemies.Add(enemy);
+        ene1++; // Aumentar el contador de enemigos tipo 1
+        yield return new WaitForSeconds(spawnInterval); // Esperar entre spawns
     }
 
+    for (int i = 0; i < enemiesType2; i++)
+    {
+        if (!spawnerActive) break; // Salir si el spawner se desactiva
+        GameObject enemy = SpawnEnemyAtSpawnerPosition(enemyType2Prefab);
+        activeEnemies.Add(enemy);
+        ene2++; // Aumentar el contador de enemigos tipo 2
+        yield return new WaitForSeconds(spawnInterval); // Esperar entre spawns
+    }
+
+    // Desactiva el spawner al finalizar
+    spawnerActive = false;
+}
+
     // Método para instanciar el enemigo en la posición del spawner
-    private void SpawnEnemyAtSpawnerPosition(GameObject enemyPrefab)
+    private GameObject SpawnEnemyAtSpawnerPosition(GameObject enemyPrefab)
     {
         // Usa la posición del spawner para instanciar el enemigo
-        Vector3 spawnPos = transform.position; // Usa la posición del spawner
-
+        Vector3 spawnPos = transform.position;
         GameObject newEnemy = Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
         newEnemy.SetActive(true); // Asegúrate de que el enemigo esté activo
+        return newEnemy; // Devuelve el enemigo creado
+    }
+
+    // Método para destruir enemigos existentes
+    private void DestroyExistingEnemies()
+    {
+        foreach (GameObject enemy in activeEnemies)
+        {
+            Destroy(enemy); // Destruye el enemigo
+        }
+        activeEnemies.Clear(); // Limpia la lista
     }
 }
