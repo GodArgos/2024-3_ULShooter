@@ -93,8 +93,8 @@ public class EnemySpawnerGUI : MonoBehaviour
     private IEnumerator SpawnEnemies()
 {
     // Generar enemigos solo una vez al iniciar el spawner
-    int enemiesType1 = Random.Range(1, maxEnemies + 1); // Genera entre 1 y maxEnemies enemigos de tipo 1
-    int enemiesType2 = Random.Range(1, maxEnemies + 1); // Genera entre 1 y maxEnemies enemigos de tipo 2
+    int enemiesType1 = Random.Range(1, maxEnemies); // Genera entre 1 y maxEnemies enemigos de tipo 1
+    int enemiesType2 = Random.Range(1, maxEnemies); // Genera entre 1 y maxEnemies enemigos de tipo 2
     suma = enemiesType1 + enemiesType2;
 
     Debug.Log("Enemigos 1: " + enemiesType1);
