@@ -17,6 +17,9 @@ public class EnemySpawnerGUI : MonoBehaviour
     public int ene1;
     public int ene2;
     private List<GameObject> activeEnemies = new List<GameObject>(); // Lista para rastrear enemigos activos
+    
+    private float hordeInterval = 60f; // Tiempo inicial entre hordas
+    private float minHordeInterval = 10f; // Tiempo mínimo entre hordas
 
     private void Start()
     {
@@ -80,13 +83,36 @@ public class EnemySpawnerGUI : MonoBehaviour
         DeactivateSpawner(); // Detener el spawner si ya estaba activo
         DestroyExistingEnemies(); // Eliminar enemigos existentes
         spawnerActive = true;
-        StartCoroutine(SpawnEnemies()); // Inicia la corutina para el spawneo
+        StartCoroutine(HordeSpawner()); // Inicia el sistema de hordas
     }
 
     // Método para desactivar el spawner
     public void DeactivateSpawner()
     {
         spawnerActive = false;
+    }
+
+    private IEnumerator HordeSpawner()
+    {
+        while (spawnerActive)
+        {
+            yield return new WaitForSeconds(hordeInterval);
+            
+
+            // Reducir el intervalo entre hordas hasta el límite mínimo
+            if (hordeInterval > minHordeInterval)
+            {
+                Debug.Log("Intervalo reducido"+hordeInterval);
+                hordeInterval -= 5f;
+                hordeInterval = Mathf.Max(hordeInterval, minHordeInterval);
+
+            }
+
+            if (spawnerActive){
+                StartCoroutine(SpawnEnemies());
+                Debug.Log("Horda iniciada");
+            };
+        }
     }
 
     // Corrutina para spawn de enemigos
@@ -120,7 +146,7 @@ public class EnemySpawnerGUI : MonoBehaviour
     }
 
     // Desactiva el spawner al finalizar
-    spawnerActive = false;
+    //spawnerActive = false;
 }
 
     // Método para instanciar el enemigo en la posición del spawner
