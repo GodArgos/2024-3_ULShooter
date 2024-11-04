@@ -5,10 +5,11 @@ using UnityEngine;
 public class Gun : MonoBehaviour
 {
     private float coolDownTime = 1f;
+    [SerializeField]
+    private float range;
     private float lastShotTime;
     public float shootForce;
     public Transform attackPoint;
-    public GameObject bullet;
     public ParticleSystem muzzle;
 
     private AudioSource src;
@@ -35,47 +36,50 @@ public class Gun : MonoBehaviour
 
     void Shoot()
     {
-        //RaycastHit hit;
-        if(lastShotTime + coolDownTime < Time.time)
+        if (lastShotTime + coolDownTime < Time.time)
         {
             muzzle.Play();
             src.Play();
-            Ray ray = fpsCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-            RaycastHit hit;
 
+            RaycastHit hit;
             Vector3 targetPoint;
-            if (Physics.Raycast(ray, out hit))
+
+            if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, range))
             {
+                GameObject enemy = hit.transform.gameObject;
+                if (enemy.CompareTag("Enemy"))
+                {
+                    enemy.GetComponent<EnemyHealth>().TakeDamage();
+                }
                 targetPoint = hit.point;
-            }else{
-                targetPoint = ray.GetPoint(75);  
+            }
+            else
+            {
+                targetPoint = fpsCam.transform.position + fpsCam.transform.forward * range;
             }
 
-            Vector3 direction = targetPoint - attackPoint.position; 
-
-            GameObject currentBullet = Instantiate(bullet, attackPoint.position, attackPoint.transform.rotation);
-            TrailRenderer trail = Instantiate(bulletTrail, attackPoint.position, attackPoint.transform.rotation);
-            StartCoroutine(SpawnTrail(trail, hit));
-            currentBullet.transform.forward = direction.normalized;
-
-            currentBullet.GetComponent<Rigidbody>().AddForce(direction.normalized * shootForce, ForceMode.Impulse);
+            TrailRenderer trail = Instantiate(bulletTrail, attackPoint.position, Quaternion.identity);
+            StartCoroutine(SpawnTrail(trail, targetPoint));
+            
             lastShotTime = Time.time;
         }
     }
 
-    IEnumerator SpawnTrail(TrailRenderer trail, RaycastHit hit)
+    IEnumerator SpawnTrail(TrailRenderer trail, Vector3 targetPoint)
     {
         float time = 0;
         Vector3 startPosition = trail.transform.position;
 
-        while(time < 1)
+        while (time < 1)
         {
-            trail.transform.position = Vector3.Lerp(startPosition, hit.point, time);
+            trail.transform.position = Vector3.Lerp(startPosition, targetPoint, time);
             time += Time.deltaTime / trail.time;
 
             yield return null;
         }
-        trail.transform.position = hit.point;
+        
+        trail.transform.position = targetPoint;
+        
         Destroy(trail.gameObject, trail.time);
     }
 
