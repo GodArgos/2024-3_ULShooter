@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
@@ -23,9 +24,47 @@ public class PlayerController : MonoBehaviour
 
     private bool m_OnJump = false;
 
+    public float tiempoActual=0.0f;
+    public TMP_Text contadortext;
+
+    public int muertesContador=0;
+    public TMP_Text muertestext;
+
+    public GameObject endScreen;
+
+    public TMP_Text screenText; 
     private void Start() 
     {
         Cursor.lockState = CursorLockMode.Locked;
+
+    }
+    public void EnemigoEliminado(){
+        muertesContador+=1;
+        muertestext.text=muertesContador.ToString()+" enemigos";
+    }
+    public void mostrarResumen(){
+            int minutes = Mathf.FloorToInt(tiempoActual / 60);
+            int seconds = Mathf.FloorToInt(tiempoActual % 60);
+            endScreen.SetActive(true);
+            screenText.text = "Tiempo de juego: "+minutes.ToString() + " min "+ seconds.ToString() + " sec " +
+            "\nEnemigos eliminados: "+muertesContador.ToString();;
+       
+        
+    }
+    void Update()
+    {
+        
+        if(Input.GetButtonDown("Fire1")){
+            mostrarResumen();
+        }
+        tiempoActual+=Time.deltaTime;
+        ActualizarContador();
+        
+    }
+
+    void ActualizarContador()
+    {
+        contadortext.text=Mathf.FloorToInt(tiempoActual).ToString() + " seg";
     }
 
     public void Move(Vector2 movement)
@@ -96,6 +135,7 @@ public class PlayerController : MonoBehaviour
         {
             // 2. Donde colisione el raycast, ejecutar un sistema de particulas
             Instantiate(m_FireSphere, hit.point, Quaternion.identity);
+            
         }
 
         

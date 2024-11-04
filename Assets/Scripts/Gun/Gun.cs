@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using TMPro;
 public class Gun : MonoBehaviour
 {
     private float coolDownTime = 1f;
@@ -17,6 +17,8 @@ public class Gun : MonoBehaviour
 
     [SerializeField]
     private TrailRenderer bulletTrail;
+
+    
 
     void Start()
     {
@@ -60,6 +62,8 @@ public class Gun : MonoBehaviour
 
             currentBullet.GetComponent<Rigidbody>().AddForce(direction.normalized * shootForce, ForceMode.Impulse);
             lastShotTime = Time.time;
+            //muertesContador += currentBullet.GetComponent<BulletCollisionCustom>().muertesContador;
+            //muertestext.text=muertesContador.ToString();
         }
     }
 
