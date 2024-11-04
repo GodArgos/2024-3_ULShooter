@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using TMPro;
 using UnityEngine;
 
@@ -45,7 +46,7 @@ public class HudManager : MonoBehaviour
     {
         if (test)
         {
-            ApplyDamage(5); // Ejemplo: aplica 20 de daño
+            ApplyDamage(5); // Ejemplo: aplica 20 de daï¿½o
             test = false;
         }
     }
@@ -56,21 +57,31 @@ public class HudManager : MonoBehaviour
 
         if (currentArmor > 0)
         {
-            int healthDamage = Mathf.CeilToInt(totalDamage * distributionFactor); // 1/5 del daño total a la vida
-            int armorDamage = totalDamage - healthDamage;           // 4/5 del daño total a la armadura
+            int healthDamage = Mathf.CeilToInt(totalDamage * distributionFactor); // 1/5 del daï¿½o total a la vida
+            int armorDamage = totalDamage - healthDamage;           // 4/5 del daï¿½o total a la armadura
 
             currentHealth = Mathf.Max(0, currentHealth - healthDamage);
             currentArmor = Mathf.Max(0, currentArmor - armorDamage);
         }
         else
         {
-            // Si la armadura es 0, todo el daño va a la vida
+            // Si la armadura es 0, todo el daï¿½o va a la vida
             currentHealth = Mathf.Max(0, currentHealth - totalDamage);
         }
 
         UpdateStatus(currentHealth, healthText);
         UpdateStatus(currentArmor, armorText);
         UpdateHealthFactor(); // Actualizar el factor de salud en el animador
+    }
+
+    public void RecoverHealth(int amount)
+    {
+        
+        currentHealth = currentHealth + amount;
+        UpdateStatus(currentHealth, healthText);
+        UpdateStatus(currentArmor, armorText);
+        UpdateHealthFactor(); // Actualizar el factor de salud en el animador
+        
     }
 
     private void UpdateStatus(int value, TextMeshProUGUI text)
@@ -86,6 +97,7 @@ public class HudManager : MonoBehaviour
         {
             int hundreds = int.Parse(valueString[0].ToString());
             sprites.Add($"<sprite={fontIndex[hundreds]}>");
+            
         }
 
         if (valueString.Length < 2)
@@ -95,14 +107,19 @@ public class HudManager : MonoBehaviour
         else
         {
             int tens = int.Parse(valueString[valueString.Length - 2].ToString());
+            
             sprites.Add($"<sprite={fontIndex[tens]}>");
+            
+            
         }
 
         int units = int.Parse(valueString[valueString.Length - 1].ToString());
+        
         sprites.Add($"<sprite={fontIndex[units]}>");
         sprites.Add("<sprite=10>");
-
+        Debug.Log(string.Join("", sprites)+"ggggg");
         text.text = string.Join("", sprites);
+        Debug.Log(string.Join("", sprites)+"aaaaaa");
     }
 
     private void UpdateHealthFactor()

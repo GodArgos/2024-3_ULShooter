@@ -10,6 +10,8 @@ public class BulletCollisionCustom : MonoBehaviour
     private float maxDistance = 200f;
     private Vector3 startPosition;
 
+    
+    
     void Start()
     {
         startPosition = transform.position;
@@ -31,8 +33,11 @@ public class BulletCollisionCustom : MonoBehaviour
             EnemyHealth health = other.gameObject.GetComponent<EnemyHealth>();
             if(health != null){
                 health.TakeDamage();
+                
                 Destroy(bullet);
             }
+            
         }
+
     }
 }
