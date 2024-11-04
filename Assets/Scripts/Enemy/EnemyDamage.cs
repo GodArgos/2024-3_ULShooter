@@ -4,13 +4,19 @@ using UnityEngine;
 
 public class EnemyDamage : MonoBehaviour
 {
-    [SerializeField] private HudManager hudManager; // Referencia al script de HudManager
-    [SerializeField] private Transform player; // Referencia al jugador
+    private HudManager hudManager; // Referencia al script de HudManager
+    private Transform player; // Referencia al jugador
     [SerializeField] private float attackRange = 2.0f; // Distancia mínima para atacar
     [SerializeField] private int damageAmount = 5; // Daño a aplicar al jugador
     [SerializeField] private float attackCooldown = 1.5f; // Cooldown entre ataques
 
     private bool canAttack = true;
+
+    private void Awake()
+    {
+        hudManager = FindObjectOfType<HudManager>();
+        player = FindObjectOfType<PlayerController>().transform;
+    }
 
     private void Update()
     {

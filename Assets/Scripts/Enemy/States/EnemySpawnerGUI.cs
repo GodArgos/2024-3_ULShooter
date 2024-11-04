@@ -4,6 +4,8 @@ using System.Collections.Generic; // Agrega esta línea para usar listas
 
 public class EnemySpawnerGUI : MonoBehaviour
 {
+    [SerializeField] private int initialEnemies = 5;
+    
     private bool showGUI = false; // Controla la visibilidad de la GUI
     private string maxEnemiesText; // Texto para el campo de entrada de máximo de enemigos
 
@@ -20,11 +22,15 @@ public class EnemySpawnerGUI : MonoBehaviour
     
     private float hordeInterval = 60f; // Tiempo inicial entre hordas
     private float minHordeInterval = 10f; // Tiempo mínimo entre hordas
+    private bool firstActivation = false;
 
     private void Start()
     {
         // Inicializa el campo de texto con el número máximo de enemigos
-        maxEnemiesText = maxEnemies.ToString();
+        maxEnemiesText = initialEnemies.ToString();
+        maxEnemies = initialEnemies;
+        firstActivation = true;
+        ActivateSpawner();
     }
 
     void Update()
@@ -96,58 +102,59 @@ public class EnemySpawnerGUI : MonoBehaviour
     {
         while (spawnerActive)
         {
-            yield return new WaitForSeconds(hordeInterval);
-            
-
-            // Reducir el intervalo entre hordas hasta el límite mínimo
-            if (hordeInterval > minHordeInterval)
+            if (!firstActivation)
             {
-                Debug.Log("Intervalo reducido"+hordeInterval);
-                hordeInterval -= 5f;
-                hordeInterval = Mathf.Max(hordeInterval, minHordeInterval);
-
+                // Reducir el intervalo entre hordas hasta el límite mínimo
+                if (hordeInterval > minHordeInterval)
+                {
+                    Debug.Log("Intervalo reducido" + hordeInterval);
+                    hordeInterval -= 5f;
+                    hordeInterval = Mathf.Max(hordeInterval, minHordeInterval);
+                }
             }
-
+            
             if (spawnerActive){
                 StartCoroutine(SpawnEnemies());
                 Debug.Log("Horda iniciada");
             };
+
+            yield return new WaitForSeconds(hordeInterval);
         }
     }
 
     // Corrutina para spawn de enemigos
     private IEnumerator SpawnEnemies()
-{
-    // Generar enemigos solo una vez al iniciar el spawner
-    int enemiesType1 = Random.Range(1, maxEnemies); // Genera entre 1 y maxEnemies enemigos de tipo 1
-    int enemiesType2 = Random.Range(1, maxEnemies); // Genera entre 1 y maxEnemies enemigos de tipo 2
-    suma = enemiesType1 + enemiesType2;
-
-    Debug.Log("Enemigos 1: " + enemiesType1);
-    Debug.Log("Enemigos 2: " + enemiesType2);
-
-    // Controlar la cantidad total de enemigos generados
-    for (int i = 0; i < enemiesType1; i++)
     {
-        if (!spawnerActive) break; // Salir si el spawner se desactiva
-        GameObject enemy = SpawnEnemyAtSpawnerPosition(enemyType1Prefab);
-        activeEnemies.Add(enemy);
-        ene1++; // Aumentar el contador de enemigos tipo 1
-        yield return new WaitForSeconds(spawnInterval); // Esperar entre spawns
-    }
+        // Generar enemigos solo una vez al iniciar el spawner
+        int enemiesType1 = Random.Range(1, maxEnemies); // Genera entre 1 y maxEnemies enemigos de tipo 1
+        int enemiesType2 = Random.Range(1, maxEnemies); // Genera entre 1 y maxEnemies enemigos de tipo 2
+        suma = enemiesType1 + enemiesType2;
 
-    for (int i = 0; i < enemiesType2; i++)
-    {
-        if (!spawnerActive) break; // Salir si el spawner se desactiva
-        GameObject enemy = SpawnEnemyAtSpawnerPosition(enemyType2Prefab);
-        activeEnemies.Add(enemy);
-        ene2++; // Aumentar el contador de enemigos tipo 2
-        yield return new WaitForSeconds(spawnInterval); // Esperar entre spawns
-    }
+        Debug.Log("Enemigos 1: " + enemiesType1);
+        Debug.Log("Enemigos 2: " + enemiesType2);
 
-    // Desactiva el spawner al finalizar
-    //spawnerActive = false;
-}
+        // Controlar la cantidad total de enemigos generados
+        for (int i = 0; i < enemiesType1; i++)
+        {
+            if (!spawnerActive) break; // Salir si el spawner se desactiva
+            GameObject enemy = SpawnEnemyAtSpawnerPosition(enemyType1Prefab);
+            activeEnemies.Add(enemy);
+            ene1++; // Aumentar el contador de enemigos tipo 1
+            yield return new WaitForSeconds(spawnInterval); // Esperar entre spawns
+        }
+
+        for (int i = 0; i < enemiesType2; i++)
+        {
+            if (!spawnerActive) break; // Salir si el spawner se desactiva
+            GameObject enemy = SpawnEnemyAtSpawnerPosition(enemyType2Prefab);
+            activeEnemies.Add(enemy);
+            ene2++; // Aumentar el contador de enemigos tipo 2
+            yield return new WaitForSeconds(spawnInterval); // Esperar entre spawns
+        }
+
+        // Desactiva el spawner al finalizar
+        firstActivation = false;
+    }
 
     // Método para instanciar el enemigo en la posición del spawner
     private GameObject SpawnEnemyAtSpawnerPosition(GameObject enemyPrefab)

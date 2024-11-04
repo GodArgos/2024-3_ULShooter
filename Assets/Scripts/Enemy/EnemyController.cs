@@ -26,7 +26,7 @@ public class EnemyController : MonoBehaviour
     private void Awake() 
     {
         m_Agent = GetComponent<NavMeshAgent>();
-
+        m_Player = FindObjectOfType<PlayerController>().transform;
         IdleState = new EnemyIdle(this);
         ChaseState = new EnemyChase(this);
         //...
