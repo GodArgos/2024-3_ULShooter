@@ -9,13 +9,18 @@ public class HudManager : MonoBehaviour
     [SerializeField] private int maxArmor = 100;
     [SerializeField] private TextMeshProUGUI healthText;
     [SerializeField] private TextMeshProUGUI armorText;
+    [SerializeField] private TextMeshProUGUI timeText;
+    [SerializeField] private TextMeshProUGUI killText;
     [SerializeField] private Animator faceAnimator;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private float distributionFactor = 0.2f;
     private Dictionary<int, int> fontIndex;
     public bool test = false;
-    private int currentHealth;
+    [HideInInspector] public int currentHealth;
     private int currentArmor;
+    private float startTime = 0;
+    [HideInInspector] public float lastTime;
+    private int killCount;
 
     private void Start()
     {
@@ -39,6 +44,8 @@ public class HudManager : MonoBehaviour
         UpdateStatus(currentHealth, healthText);
         UpdateStatus(currentArmor, armorText);
         UpdateHealthFactor();
+
+        startTime = Time.time;
     }
 
     private void Update()
@@ -47,6 +54,12 @@ public class HudManager : MonoBehaviour
         {
             ApplyDamage(5); // Ejemplo: aplica 20 de daño
             test = false;
+        }
+
+        if (currentHealth > 0)
+        {
+            UpdateTime();
+            killText.text = killCount.ToString();
         }
     }
 
@@ -117,4 +130,26 @@ public class HudManager : MonoBehaviour
         faceAnimator.SetFloat("Direction", Random.Range(0, 2));
         faceAnimator.SetTrigger("Damage");
     }
+
+    private void UpdateTime()
+    {
+        float totalTime = Time.time - startTime;
+        lastTime = totalTime;
+        string mins = ((int)totalTime / 60).ToString("00");
+        string segs = (totalTime % 60).ToString("00");
+        string TimerString = string.Format("{00}:{01}", mins, segs);
+
+        timeText.text = TimerString;
+    }
+
+    public void UpdateKillCount()
+    {
+        killCount++;
+    }
+
+    public int GetKillCount()
+    {
+        return killCount;
+    }
 }
+    

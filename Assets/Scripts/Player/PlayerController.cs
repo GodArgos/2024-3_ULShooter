@@ -84,20 +84,40 @@ public class PlayerController : MonoBehaviour
 
     public void Fire()
     {
-        // 1. Lanzar un raycast
-        RaycastHit hit;
-        var collision = Physics.Raycast(
-            m_FirePoint.position,
-            Camera.main.transform.forward,
-            out hit,
-            m_FireRange
-        );
-        if (collision)
-        {
-            // 2. Donde colisione el raycast, ejecutar un sistema de particulas
-            Instantiate(m_FireSphere, hit.point, Quaternion.identity);
-        }
+        //// 1. Lanzar un raycast
+        //RaycastHit hit;
+        //var collision = Physics.Raycast(
+        //    m_FirePoint.position,
+        //    Camera.main.transform.forward,
+        //    out hit,
+        //    m_FireRange
+        //);
+        //if (collision)
+        //{
+        //    // 2. Donde colisione el raycast, ejecutar un sistema de particulas
+        //    Instantiate(m_FireSphere, hit.point, Quaternion.identity);
+        //}
 
-        
+        // Verificar si m_FirePoint no es nulo
+        //if (m_FirePoint == null)
+        //{
+        //    Debug.LogWarning("m_FirePoint es nulo, no se puede disparar.");
+        //    return;
+        //}
+
+        //// 1. Lanzar un raycast
+        //RaycastHit hit;
+        //var collision = Physics.Raycast(
+        //    m_FirePoint.position,
+        //    Camera.main.transform.forward,
+        //    out hit,
+        //    m_FireRange
+        //);
+        //if (collision)
+        //{
+        //    // 2. Donde colisione el raycast, ejecutar un sistema de partículas
+        //    Instantiate(m_FireSphere, hit.point, Quaternion.identity);
+        //}
+
     }
 }

@@ -5,11 +5,18 @@ using UnityEngine;
 public class EnemyHealth : MonoBehaviour
 {
     private int lifes = 3;
+    private HudManager hudManager;
+
+    private void Start()
+    {
+        hudManager = FindObjectOfType<HudManager>();
+    }
 
     private void Update() 
     {
         if(lifes == 0)
         {
+            hudManager.UpdateKillCount();
             Destroy(transform.parent.gameObject);
         }    
     }
