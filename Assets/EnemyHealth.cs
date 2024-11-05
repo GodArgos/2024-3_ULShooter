@@ -6,9 +6,11 @@ public class EnemyHealth : MonoBehaviour
 {
     private int lifes = 3;
     private HudManager hudManager;
+    [SerializeField] private EnemyController controller;
 
     private void Start()
     {
+        lifes = (int)controller.enemyType.InitialHealth;
         hudManager = FindObjectOfType<HudManager>();
     }
 

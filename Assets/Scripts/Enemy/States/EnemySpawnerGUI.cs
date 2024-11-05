@@ -4,7 +4,7 @@ using System.Collections.Generic; // Agrega esta línea para usar listas
 
 public class EnemySpawnerGUI : MonoBehaviour
 {
-    [SerializeField] private int initialEnemies = 5;
+    [SerializeField] private int initialEnemies = 7;
     
     private bool showGUI = false; // Controla la visibilidad de la GUI
     private string maxEnemiesText; // Texto para el campo de entrada de máximo de enemigos
@@ -160,7 +160,12 @@ public class EnemySpawnerGUI : MonoBehaviour
     private GameObject SpawnEnemyAtSpawnerPosition(GameObject enemyPrefab)
     {
         // Usa la posición del spawner para instanciar el enemigo
-        Vector3 spawnPos = transform.position;
+        Vector3 spawnPos = transform.position + new Vector3(
+        Random.Range(-1f, 1f), // Desplazamiento en x entre -1 y 1
+        transform.position.y,                     // Mantén la misma altura (y)
+        Random.Range(-1f, 1f)  // Desplazamiento en z entre -1 y 1
+        );
+
         GameObject newEnemy = Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
         newEnemy.SetActive(true); // Asegúrate de que el enemigo esté activo
         return newEnemy; // Devuelve el enemigo creado

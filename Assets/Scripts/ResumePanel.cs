@@ -9,6 +9,7 @@ public class ResumePanel : MonoBehaviour
     [SerializeField] private GameObject panel;
     [SerializeField] private TextMeshProUGUI time;
     [SerializeField] private TextMeshProUGUI kills;
+    [SerializeField] private GameObject crosshair;
     private HudManager hudManager;
     private bool active = false;
 
@@ -23,6 +24,7 @@ public class ResumePanel : MonoBehaviour
         if (hudManager.currentHealth <= 0 && !active)
         {
             hudManager.gameObject.SetActive(false);
+            crosshair.SetActive(false);
             panel.SetActive(true);
             active = true;
             SetValues();
@@ -30,7 +32,7 @@ public class ResumePanel : MonoBehaviour
             Time.timeScale = 0;
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.R) && active)
         {
             Time.timeScale = 1;
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
