@@ -18,6 +18,13 @@ public class HudManager : MonoBehaviour
     private int currentHealth;
     private int currentArmor;
 
+    
+    private PlayerController playerController;
+
+    private void Awake()
+    {
+        playerController = FindObjectOfType<PlayerController>();
+    }
     private void Start()
     {
         fontIndex = new Dictionary<int, int>()
@@ -62,11 +69,13 @@ public class HudManager : MonoBehaviour
 
             currentHealth = Mathf.Max(0, currentHealth - healthDamage);
             currentArmor = Mathf.Max(0, currentArmor - armorDamage);
+            
         }
         else
         {
             // Si la armadura es 0, todo el da�o va a la vida
             currentHealth = Mathf.Max(0, currentHealth - totalDamage);
+            
         }
 
         UpdateStatus(currentHealth, healthText);
@@ -77,7 +86,7 @@ public class HudManager : MonoBehaviour
     public void RecoverHealth(int amount)
     {
         
-        currentHealth = currentHealth + amount;
+        currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
         UpdateStatus(currentHealth, healthText);
         UpdateStatus(currentArmor, armorText);
         UpdateHealthFactor(); // Actualizar el factor de salud en el animador
@@ -125,6 +134,13 @@ public class HudManager : MonoBehaviour
     private void UpdateHealthFactor()
     {
         float healthFactor = (float)currentHealth / maxHealth;
+        Debug.Log("healthFactor");
+        Debug.Log(healthFactor);
+        if(healthFactor == 0.05  || healthFactor == 0){
+                Debug.Log("pppppp");
+                playerController.mostrarResumen();
+                Time.timeScale = 0;
+        }
         faceAnimator.SetFloat("HealthFactor", healthFactor);
     }
 

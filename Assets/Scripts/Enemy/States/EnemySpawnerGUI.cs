@@ -23,6 +23,7 @@ public class EnemySpawnerGUI : MonoBehaviour
     private float hordeInterval = 60f; // Tiempo inicial entre hordas
     private float minHordeInterval = 10f; // Tiempo mínimo entre hordas
     private bool firstActivation = false;
+    public Transform target;
 
     private void Start()
     {
@@ -172,6 +173,7 @@ public class EnemySpawnerGUI : MonoBehaviour
         foreach (GameObject enemy in activeEnemies)
         {
             Destroy(enemy); // Destruye el enemigo
+            target.GetComponent<PlayerController>().EnemigoEliminado();
         }
         activeEnemies.Clear(); // Limpia la lista
     }

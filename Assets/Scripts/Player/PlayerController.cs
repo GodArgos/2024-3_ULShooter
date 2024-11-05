@@ -54,9 +54,9 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         
-        if(Input.GetButtonDown("Fire1")){
-            mostrarResumen();
-        }
+        //if(Input.GetButtonDown("Fire1")){
+          //  mostrarResumen();
+        //}
         tiempoActual+=Time.deltaTime;
         ActualizarContador();
         

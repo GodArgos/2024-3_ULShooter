@@ -5,7 +5,7 @@ using UnityEngine;
 public class HealthPickup : MonoBehaviour
 {
     
-    public int healthAmount = 25; // Cantidad de salud que recupera
+    public int healthAmount = 50; // Cantidad de salud que recupera
 
     void OnTriggerEnter(Collider other)
     {

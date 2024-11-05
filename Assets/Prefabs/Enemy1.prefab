@@ -153,7 +153,7 @@ PrefabInstance:
       addedObject: {fileID: 7778349280763802271}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 80765edb11a22104cba041a81eed262a, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7266220701874341581}
+      addedObject: {fileID: 2719364976927217406}
   m_SourcePrefab: {fileID: 100100000, guid: 80765edb11a22104cba041a81eed262a, type: 3}
 --- !u!4 &1535284075070939491 stripped
 Transform:
@@ -188,7 +188,7 @@ CapsuleCollider:
   m_Height: 1.8
   m_Direction: 1
   m_Center: {x: 0, y: 0.9, z: 0}
---- !u!114 &7266220701874341581
+--- !u!114 &2719364976927217406
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -200,3 +200,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dac433905d259944aae73eb516eaeae5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  target: {fileID: 0}

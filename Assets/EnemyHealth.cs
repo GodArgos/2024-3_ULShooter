@@ -8,14 +8,19 @@ public class EnemyHealth : MonoBehaviour
     private int lifes = 3;
     
 
-    public Transform target;
+    private PlayerController playerController;
     
+
+    private void Awake()
+    {
+        playerController = FindObjectOfType<PlayerController>();
+    }
     private void Update() 
     {
         if(lifes == 0)
         {
             Destroy(gameObject);
-            target.GetComponent<PlayerController>().EnemigoEliminado();
+            playerController.EnemigoEliminado();
             
         }    
     }
